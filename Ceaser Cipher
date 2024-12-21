@@ -1,0 +1,44 @@
+# Define constants
+shift = 3
+UPPER_LAST_CHAR_CODE = 90
+UPPER_FIRST_CHAR_CODE = 65
+LOWER_LAST_CHAR_CODE = 122
+LOWER_FIRST_CHAR_CODE = 97
+CHAR_RANGE = 26
+
+# Caesar Cipher Function
+def caesar(txt, shift):
+    result = ""
+    for char in txt:
+        if char.isalpha():
+            char_code = ord(char)
+            new_code = char_code + shift
+            if char.isupper():
+                if new_code > UPPER_LAST_CHAR_CODE:
+                    new_code -= CHAR_RANGE
+                if new_code < UPPER_FIRST_CHAR_CODE:
+                    new_code += CHAR_RANGE 
+                new_char = chr(new_code)
+                result += new_char 
+            else:
+                if new_code > LOWER_LAST_CHAR_CODE:
+                    new_code -= CHAR_RANGE
+                if new_code < LOWER_FIRST_CHAR_CODE:
+                    new_code += CHAR_RANGE 
+                new_char = chr(new_code)
+                result += new_char       
+        else:
+            result += char
+    return result
+
+# User input
+text = input("Enter the text message:\n")
+shift_key=int(input("Enter the shift key:\n"))
+user_choice=int(input("Choose an option\n1)Encryption\n2)Decryption\n"))
+if user_choice==1:
+    print("Encrypted message is:\n",caesar(text, shift_key))
+elif user_choice==2:
+    print("Decrypted message is:\n",caesar(text, -shift_key))
+else:
+    print('Invalid Choice.Please selesct 1 or 2')
+    
