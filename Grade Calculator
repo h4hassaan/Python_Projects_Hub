@@ -1,0 +1,36 @@
+#Grade calculator
+def average_calculator(s1,s2,s3):
+    average=(s1+s2+s3)/3
+    return average
+def grade(average):
+    if 80<average<=100:
+        return "A"
+    elif 60<average<=80:
+        return "B"
+    elif 40<average<=60:
+        return "C"
+    else:
+        return"F"
+def main():
+    while True:
+        try:
+            maths=int(input("Enter your Mathematics marks:\n"))
+            eng=int(input("Enter your English marks:\n"))
+            science=int(input("Enter your Science marks:\n"))
+            
+            if not (0<=maths<=100) or not (0<=eng<=100) or not (0<=science<=100):
+                raise ValueError("Invalid marks") 
+            
+            avg=average_calculator(maths,eng,science)
+            print("Your average marks are:\n",avg)
+            print("Your grade is:\n",grade(avg))
+            
+        except ValueError as e:
+            print(f"Error:{e}")  
+            continue
+        user_choice=input("Do you want to continue (y/n):").upper()
+        if user_choice != "Y":
+            break  
+        
+if __name__ == "__main__":
+    main()
