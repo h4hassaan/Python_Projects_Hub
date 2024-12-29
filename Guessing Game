@@ -1,0 +1,49 @@
+#Guessing Game
+import random
+def get_computer_choice():
+    return random.randint(1,100)
+def get_user_choice():
+    while True:
+        try:
+            value=int(input("Choose a number between 1 to 100:\n"))
+            if not (1<=value<=100):
+                raise ValueError('Invalid Choice')
+            else:
+                return value
+                break
+        except ValueError as e:
+            print(f"{e}")
+        
+            
+        
+def provide_hint(userchoice,computerchoice):
+    if userchoice > computerchoice:
+        return "Too high"
+    elif userchoice < computerchoice:
+        return "Too low"
+
+def main():
+    print("----------------------------------------- WELCOME TO GUESSING GAME.............................................................")
+    while True :
+        computer_choice = get_computer_choice()  
+        while True:
+            user_choice = get_user_choice()
+            hint = provide_hint(user_choice, computer_choice)
+            print(hint)
+
+            if user_choice == computer_choice:
+                print("Congratulations you won")
+                break
+        play_again = input("Do you want to play again? (y/n):\n").lower()
+        if play_again != "y":
+            break
+    print("Thanks for your time")
+
+if __name__ == "__main__":
+    main()
+
+
+
+    
+    
+    
