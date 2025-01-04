@@ -12,7 +12,7 @@ def write_data(file_name, data):
         for entry in data:
             file.write(','.join(entry) + '\n')
 
-# Function to authenticate admin
+#  Function to authenticate admin
 def authenticate_admin():
     username = input("Enter username: ")
     password = input("Enter password: ")
