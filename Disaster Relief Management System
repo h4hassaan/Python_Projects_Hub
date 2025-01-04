@@ -1,0 +1,150 @@
+# Function to read data from a file
+def read_data(file_name):
+    try:
+        with open(file_name, 'r') as file:
+            return [line.strip().split(',') for line in file.read().splitlines()]
+    except FileNotFoundError:
+        return []
+
+# Function to write data to a file
+def write_data(file_name, data):
+    with open(file_name, 'w') as file:
+        for entry in data:
+            file.write(','.join(entry) + '\n')
+
+# Function to authenticate admin
+def authenticate_admin():
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+
+    if username == 'admin' and password == 'admin':
+        return True
+    else:
+        print("Authentication Failed")
+        return False
+
+# Function to add an affected individual
+def add_affected_individual():
+    name = input("Enter name: ")
+    age = input("Enter age: ")
+    city = input("Enter city: ")
+    assistance = input('Required assistance (food, medical, shelter): ')
+    severity = input("Severity level (low, medium, high): ")
+
+    data = read_data('affected_individuals.txt')
+    data.append([name, age, city, assistance, severity])
+    write_data('affected_individuals.txt', data)
+    print("Affected individual added.")
+
+# Function to add a resource
+def add_resource():
+    resource_type = input("Enter resource type (food, medical, shelter): ")
+    quantity = input("Enter quantity: ")
+
+    data = read_data('resources.txt')
+    data.append([resource_type, quantity])
+    write_data('resources.txt', data)
+    print("Resource added.")
+
+# Function to view resources
+def view_resources():
+    resources = read_data('resources.txt')
+    for resource in resources:
+        if len(resource) >= 2:
+            print(f"Resource Type: {resource[0]}, Quantity: {resource[1]}")
+        else:
+            print("Error: Resource entry is incomplete:", resource)
+
+# Function to remove a resource
+def remove_resource():
+    resource_type = input("Enter the resource type to remove: ")
+
+    resources = read_data('resources.txt')
+    resources = [resource for resource in resources if resource[0] != resource_type]
+    write_data('resources.txt', resources)
+    print("Resource removed.")
+
+# Function to allocate resources
+def allocate_resources():
+    affected_individuals = read_data('affected_individuals.txt')
+    resources = read_data('resources.txt')
+
+    print("Affected Individuals:", affected_individuals)  # Debug statement
+    print("Resources:", resources)  # Debug statement
+
+    for individual in affected_individuals:
+        if individual[4] == 'high':
+            required_resource = individual[3]
+            print(f"Required Resource: {required_resource}")  # Debug statement
+            for resource in resources:
+                print(f"Processing Resource: {resource}")  # Debug statement
+                if resource[0] == required_resource:
+                    try:
+                        if int(resource[1]) > 0:
+                            print(f"Allocating {required_resource} to {individual[0]}")
+                            resource[1] = str(int(resource[1]) - 1)
+                            break
+                    except ValueError:
+                        print(f"Error: Non-numeric quantity for resource {resource[0]}")
+
+    write_data('resources.txt', resources)
+
+# Function to generate insights
+def generate_insights():
+    affected_individuals = read_data('affected_individuals.txt')
+    location_severity = {}
+    resource_demand = {}
+
+    for individual in affected_individuals:
+        location = individual[2]
+        resource = individual[3]
+        severity = individual[4]
+
+        if location not in location_severity:
+            location_severity[location] = 0
+        if severity == 'high':
+            location_severity[location] += 1
+
+        if resource not in resource_demand:
+            resource_demand[resource] = 0
+        resource_demand[resource] += 1
+
+    most_critical_location = max(location_severity, key=location_severity.get)
+    most_required_resource = max(resource_demand, key=resource_demand.get)
+
+    print(f"Most critical location: {most_critical_location}")
+    print(f"Most required resource: {most_required_resource}")
+
+# Main function
+def main():
+    if authenticate_admin():
+        while True:
+            print("\n<<<<<<<<<<<<<<<<<<<<<<<<Disaster Relief Management System>>>>>>>>>>>>>>>>>>>>>>>>>")
+            print("1. Add Affected Individual")
+            print("2. View Resources")
+            print("3. Add Resource")
+            print("4. Remove Resource")
+            print("5. Allocate Resources")
+            print("6. Generate Insights")
+            print("7. Exit")
+
+            choice = input("Enter your choice: ")
+            if choice == '1':
+                add_affected_individual()
+            elif choice == '2':
+                view_resources()
+            elif choice == '3':
+                add_resource()
+            elif choice == '4':
+                remove_resource()
+            elif choice == '5':
+                allocate_resources()
+            elif choice == '6':
+                generate_insights()
+            elif choice == '7':
+                break
+            else:
+                print("Invalid choice! Please try again.")
+
+if __name__ == "__main__":
+    main()
