@@ -1,5 +1,4 @@
 def order():
-    
     userchoice=input("What do u want to purchase").capitalize
     if userchoice == "BURGER":
         bill=bill+800
