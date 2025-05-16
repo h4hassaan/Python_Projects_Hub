@@ -1,0 +1,30 @@
+def order():
+    
+    userchoice=input("What do u want to purchase").capitalize
+    if userchoice == "BURGER":
+        bill=bill+800
+    elif userchoice == "PIZZA" :
+        bill =bill+2000
+    elif userchoice == "SHAWARMA":
+        bill =bill+ 400
+    else:
+        print("Invalid choice")
+    continuation()
+
+def continuation(bill):
+    while True:
+        usercontinue=input("Do u want to continue(y/n)").lower
+        if usercontinue == "y":
+            continue
+        else:
+            break 
+        
+    print(f"Your bill = {bill}")
+
+def main():
+    bill=0
+    print("Welcome to our restraunt.Here's the menu ")
+    print("1.Pizza = RS2000  \n2.Burger = RS800  \n3.Shawarma = RS400")
+    order()
+if __name__ == "__main__":
+    main()       
