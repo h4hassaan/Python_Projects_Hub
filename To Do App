@@ -1,0 +1,54 @@
+def main():
+    tasks = []
+    print("---------------------Welcome to TO DO APP---------------------")
+    num=int(input("Enter the number of tasks you want to add :"))
+    for i in range(1,num+1):
+        addtask=input(f"Enter the tast {i} :")
+        tasks.append(addtask)
+    while True:
+        userchoice=int(input(" 1) ADD \n 2) DELETE \n 3) VIEW \n 4) UPGRADE \n 5) QUIT "))    
+        
+        if userchoice == 1:
+            newtask=input('Enter the task you want to add :')
+            tasks.append(newtask)  
+        
+        elif userchoice == 2:
+            deltask=input('Enter the task you want to delete :')
+            if deltask in tasks:
+                tasks.remove(deltask)
+                print("Task has been Deleted successfully")
+            else:
+                print("Invalid task") 
+        
+        elif userchoice == 3:
+            print(f"Your Tasks are \n {tasks}")
+            
+        elif userchoice == 4:
+            upd=input("Enter the task you want to update :")
+            if upd in tasks:
+                updtask=input("Enter the new task : ")
+                ind=tasks.index(upd)
+                tasks[ind]=updtask
+                print("Task has been updated successfully")
+                
+        elif userchoice == 5:
+            print("Have a nice day")
+            break
+
+main()
+
+     
+    
+    
+    
+
+
+
+
+
+
+
+
+
+    
+    
