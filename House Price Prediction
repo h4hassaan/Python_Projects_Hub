@@ -1,0 +1,65 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split 
+from sklearn.linear_model import LinearRegression
+
+
+data = {
+    "Area": [2000, 1800, None, 2500, 2300, 1500, 2200, None, 2600, 2100],
+    "Bedrooms": [3, 2, 3, 4, None, 2, 3, 3, 4, None],
+    "Bathrooms": [2, 1, 2, None, 2, 1, 2, 2, 3, 1],
+    "Location": ["Downtown", "Uptown", "Suburb", "Suburb", "Downtown", None, "Uptown", "Suburb", "Downtown", "Uptown"],
+    "Price": [500000, 400000, 420000, 600000, 550000, 300000, 480000, 430000, 620000, 410000]
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+#Cleaning Missing Data
+
+df["Area"].fillna(df["Area"].mean(),inplace=True)
+df["Bedrooms"].fillna(df["Bedrooms"].mean(),inplace=True)
+df["Bathrooms"].fillna(df["Bathrooms"].mean(),inplace=True)
+df["Location"].fillna("Unknown",inplace=True)
+
+print("Cleaned Data:\n",df)
+
+#Label Encoding 
+
+le_loc = LabelEncoder()
+
+df["Location_LE"] = le_loc.fit_transform(df["Location"])
+print("Label Encoding:\n",df)
+
+#Scaling
+
+mm = MinMaxScaler()
+num_col = ["Area","Bathrooms","Bedrooms","Location_LE"]
+scaling = mm.fit_transform(df[num_col])
+df_mm = pd.DataFrame(scaling,columns=num_col)
+df_mm["Price"]= df["Price"]
+print("MinMax Scaling: \n",df_mm) 
+
+#Test Train
+
+train,test = train_test_split(df_mm,test_size = 0.2, random_state = 42)
+
+#Linear Regression 
+
+x_train = train[["Area","Bathrooms","Bedrooms","Location_LE"]]
+y_train = train["Price"]
+
+x_test = test[["Area","Bathrooms","Bedrooms","Location_LE"]]
+y_test = test[["Price"]]
+
+model = LinearRegression()
+model.fit(x_train,y_train)
+
+pred = model.predict(x_test)
+
+print("Predicted Prices:\n",pred)
+print("Actual Prices:\n",y_test)
+
+
+
