@@ -1,0 +1,68 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Moderate dataset: car price prediction
+data = {
+    "Brand": ["Toyota", "Honda", "BMW", "Audi", "Toyota", "Honda", "BMW", "Audi", "Toyota", "BMW"],
+    "Model_Year": [2015, 2017, 2018, 2020, 2016, 2018, 2021, np.nan, 2019, 2015],
+    "Mileage": [50000, 30000, 40000, 25000, 60000, 35000, np.nan, 20000, 45000, 70000],
+    "Fuel_Type": ["Petrol", "Diesel", "Petrol", "Diesel", "Petrol", "Diesel", "Electric", "Electric", None, "Petrol"],
+    "Transmission": ["Manual", "Automatic", "Automatic", None, "Manual", "Automatic", "Automatic", "Automatic", "Manual", "Manual"],
+    "Owner_Type": ["First", "Second", "First", "First", "Third", "First", "Second", "First", "Third", None],
+    "Price": [5.5, 7.0, 18.0, 25.0, 6.0, 9.5, 35.0, 40.0, 8.0, 4.5]  # in lakhs
+}
+
+df = pd.DataFrame(data)
+print("Raw Data:\n", df)
+
+#Cleaning Data
+
+df["Model_Year"].fillna(df["Model_Year"].mean(),inplace=True)
+df["Mileage"].fillna(df["Mileage"].mean(),inplace=True)
+df["Fuel_Type"].fillna("Unknown",inplace=True)
+df["Transmission"].fillna("Unknown",inplace=True)
+df["Owner_Type"].fillna("Unknown",inplace=True)
+print("Cleaned Data:\n",df)
+
+#Encoding
+le_brand =  LabelEncoder()
+le_fuel = LabelEncoder()
+le_trans = LabelEncoder()
+le_owner = LabelEncoder()
+
+df["Brand_Le"] = le_brand.fit_transform(df["Brand"])
+df["Fuel_Type_Le"] = le_fuel.fit_transform(df["Fuel_Type"])
+df["Transmission_Le"] = le_trans.fit_transform(df["Transmission"])
+df["Owner_Type_Le"] = le_owner.fit_transform(df["Owner_Type"])
+
+print("\nLabel Encoding:\n",df)
+
+#Test Train
+mm = MinMaxScaler()
+col = df[["Model_Year","Mileage","Brand_Le","Fuel_Type_Le","Transmission_Le","Owner_Type_Le","Price"]]
+train,test = train_test_split(col,test_size=0.2,random_state = 42)
+
+x_train = train[["Model_Year","Mileage","Brand_Le","Fuel_Type_Le","Transmission_Le","Owner_Type_Le"]]
+x_mmtrain = mm.fit_transform(x_train)
+y_train = train[["Price"]]
+
+
+x_test = test[["Model_Year","Mileage","Brand_Le","Fuel_Type_Le","Transmission_Le","Owner_Type_Le"]]
+x_mmtest = mm.transform(x_test)
+y_test = test[["Price"]]
+
+model = LinearRegression()
+model.fit(x_mmtrain,y_train)
+pred = model.predict(x_mmtest)
+print("Predictions: \n",pred)
+
+# Comparison
+result = pd.DataFrame({
+    "Actual_Price": y_test.values.flatten(),
+    "Predicted_Price": pred.flatten()
+})
+print("\nComparison:\n", result)
