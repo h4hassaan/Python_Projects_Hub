@@ -1,0 +1,60 @@
+def addtask(t,a,g,books_pool):
+    books_pool.append([t,a,g])
+    return "Book Added"
+
+def view(books_pool,c):
+    
+    genre = []
+    for book in books_pool:
+        if book[2] == c:
+            genre.append(book)
+            
+    return genre
+    
+
+def delete(books_pool):
+    
+    for i in range (len(books_pool)):
+        book = books_pool[i]
+        print(i+1, ": ",book)
+
+    choice = input("Enter the title to del")
+    for i in range(len(books_pool)):
+        book = books_pool[i]
+        if book[0] == choice:
+            books_pool.pop(i)
+            
+    return "Book Deleted"
+
+
+def main():
+    books_pool=[]
+    while (True):
+        print("Welcome to Book Management System")
+        print("1)Add a new bookk")
+        print("2)View all books of a particular genre")
+        print("3)Delete a book")
+        print("4)Exit")
+        
+        n = int(input("Enter your choice: "))
+        
+        if n == 1:
+            title = input("Enter the tilte :")
+            author = input("Enter the author : ")
+            genre = input("Enter the genre: ").lower()
+            print(addtask(title,author,genre,books_pool))
+            
+        elif n == 2:
+            c = input("Enter the genre: ")
+            print(view(books_pool,c))
+            
+        elif n == 3:
+            print(delete(books_pool))
+            
+        elif n == 4:
+            print("Thanks for your time")
+            break
+        else:
+            print("Invalid choice please try again")
+            
+main()
